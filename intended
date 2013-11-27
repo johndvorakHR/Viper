@@ -1,0 +1,17 @@
+var Model = Viper.create(hydrajson);
+
+
+Model.initXHR(); // runs through the entrypoint and fetches the URLs for each operation
+
+var User = Model.createUser(); // can be called without initialization
+
+CreateResourceOperation must always return a class of the type it creates
+
+// each of these operations throw an error when the required properties are null
+User.create(); // creates a new user in server (requires a CreateResourceOperation)
+User.delete(); // deletes the user in server (requires a DeleteResourceOperation)
+User.save(); // updates the user in server (requires a ReplaceResourceOperation)
+User.load(); // fetches the user from server (requires a GET method)
+User.prop.create(); // creates the property "prop" of user in server
+User.prop.save(); // updates the property "prop" of user in server
+User.prop.load(); // fetches the property "prop" from user in server

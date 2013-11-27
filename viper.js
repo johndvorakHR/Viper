@@ -76,15 +76,26 @@ var viper = function(json) {
         return error(3, "@type is not a valid ApiDocumentation, needed: " + 
                     docP + ", found: " + json["@type"] ); 
     }
+    // TODO: check if there is an entrypoint
+    //
+    // the name that viper uses for classes/operations/properties is made by 
+    // the contents after the '/' or the ':' characters of the string
+    var getName = function(n) { return n.split('/').pop().split(':').pop(); };
 
     // create a class
     var createClass = function(classObj) {
-        var id = classObj["@id"];
-        // does this class is one of the hydra supplied classes ?
-        if(isHydra(id)) {
-            // HERE
-        }
+        var id = classObj["@id"],
+            name = getName(id),
+            obj = {};
 
+        // is this class one of the hydra supplied classes ?
+        if(isHydra(id)) {
+            // TODO: ignore ?
+            // break it at the '#' and keep the name after it
+            var l = id.split('#')[1],
+            if(l) { return { classId: l, className: name };  } 
+            else  { return { classId: id, className: name }; }
+        }
     };
     // fetch the classes
     if(json[classesP]) {
