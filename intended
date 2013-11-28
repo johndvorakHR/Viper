@@ -1,17 +1,23 @@
-var Model = Viper.create(hydrajson);
+var Api = Viper.init(hydrajson); // parses the classes, finds the entrypoint and XHR's into it to build the first obj
+// each property gets mapped to a _prop and prop, where the version w/o the _ is an accessor
 
+// get() is available if the users property has a supportedOperation with a 
+// GET method that returns a Collection, it appends the arg to the url of the 
+// users class. 
+// if the returned value has an @id that is an hydra class, then more methods 
+// can be available, otherwise only the json parsed object is returned
+var john = Api.users.get('550e8400-e29b-41d4-a716-446655440000');
+var john = Api.persons.get('john');
+Api.persons.put('john', john); // requires a ReplaceResourceOperation on persons/john
+Api.persons.delete('john'); // requires a DeleteResourceOperation on persons/john
+// update only the name
+Api.persons.john.put('name', 'Mary');
 
-Model.initXHR(); // runs through the entrypoint and fetches the URLs for each operation
+var users = Api.users.all(); // available if the users property has a supportedOperation with a GET method that returns a Collection
+var persons = Api.persons.page(1); // available if the persons property has a supportedOperation with a GET method that returns a PagedCollection
 
-var User = Model.createUser(); // can be called without initialization
+var issues = Api.issues.all();
+var myIssue = Api.issues.get(4);
+var total = Api.issues.totalItems;
 
-CreateResourceOperation must always return a class of the type it creates
-
-// each of these operations throw an error when the required properties are null
-User.create(); // creates a new user in server (requires a CreateResourceOperation)
-User.delete(); // deletes the user in server (requires a DeleteResourceOperation)
-User.save(); // updates the user in server (requires a ReplaceResourceOperation)
-User.load(); // fetches the user from server (requires a GET method)
-User.prop.create(); // creates the property "prop" of user in server
-User.prop.save(); // updates the property "prop" of user in server
-User.prop.load(); // fetches the property "prop" from user in server
+var myComment = Api.issues.get(5).comments.create('This is a new comment');

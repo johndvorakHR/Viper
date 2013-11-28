@@ -1,8 +1,7 @@
-<html><head></head><body><script src="viper.js">
+<html><head></head><body>
 
-
-
-</script>
+<script src="q.js"></script> 
+<script src="viper.js"></script>
 <script>
 var 
 json1 = { "@context": { "asdf": "fdsa" } },
@@ -28,6 +27,26 @@ var runTests = function() {
 };
 
 var hydra = function() { return viper(jsonOk2); };
+
+var tryQ = function() {
+
+    var v = 0;
+    var fst = function() {
+        var d = Q.defer();
+        Q.delay( d.resolve({ ret: 123, foo: "bar", bar: "foo" }), 2500);
+        return d.promise;
+    }, snd = function(o) {
+        console.log("got ", o);
+        v = -1;
+        return -1;
+    };
+
+    console.log("RUNNING");
+    fst().get("foo").then(snd).finally(function() {
+        console.log("adding", (v + 2));
+    });
+    console.log("END");
+};
 
 </script>
 </body></html>

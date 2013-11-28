@@ -80,28 +80,27 @@ var viper = function(json) {
     //
     // the name that viper uses for classes/operations/properties is made by 
     // the contents after the '/' or the ':' characters of the string
-    var getName = function(n) { return n.split('/').pop().split(':').pop(); };
-
-    // create a class
-    var createClass = function(classObj) {
-        var id = classObj["@id"],
-            name = getName(id),
-            obj = {};
-
-        // is this class one of the hydra supplied classes ?
-        if(isHydra(id)) {
-            // TODO: ignore ?
-            // break it at the '#' and keep the name after it
-            var l = id.split('#')[1],
-            if(l) { return { classId: l, className: name };  } 
-            else  { return { classId: id, className: name }; }
-        }
-    };
-    // fetch the classes
-    if(json[classesP]) {
-        for (var i = 0; i < json[classesP].length; i++) { 
-        }
-    }
+    var getName = function(n) { return n.split('/').pop()
+                                        .split(':').pop()
+                                        .split('#').pop(); },
+        // maps all the classes to their id
+        classes = function() {
+            var obj = {};
+            if(json[classesP]) {
+                for (var i = 0; i < json[classesP].length; i++) { 
+                    var classID = json[classesP][i]["@id"];
+                    obj[classID] = json[classesP][i];
+                    obj[classID]._name = getName(classID);
+                }
+            }
+            return obj;
+        },
+        createClassObj = function(c) {
+            // check if it has a supported operation with a GET method and that returns a collection/pagedcollection
+            // check if it has 
+        };
+    
+    return classes();
 };
 
 /*
